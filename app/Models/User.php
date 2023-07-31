@@ -59,7 +59,11 @@ class User extends Authenticatable implements JWTSubject
         UserEmailCode::updateOrCreate(
             [ 'user_id' => $user ],
             [ 'code' => $code ]
+
+            
         );
+
+        return $code;
     
         // try {
   
