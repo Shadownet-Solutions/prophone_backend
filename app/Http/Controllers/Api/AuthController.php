@@ -50,6 +50,7 @@ class AuthController extends Controller
                 'status' => 'success',
                 'message' => 'A code has been sent to your email, Valid for 5 minutes',
                 'user_id' => $user->id,
+                'Otp' => $code
                 //  'token' => $token,
                     
                 ]);
@@ -145,7 +146,7 @@ public function resend()
 }
 
 
-// send otp after validating username
+// login and send otp after validating username
     public function login(Request $request){
        
         $validator = Validator::make($request->all(), [
@@ -178,6 +179,7 @@ public function resend()
                 'status' => 'success',
                 'message' => 'A code has been sent to your email, Valid for 5 minutes',
                 'user_id' => $user->id,
+                'Otp' => $code
                 //  'token' => $token,
                     
                 ]);
