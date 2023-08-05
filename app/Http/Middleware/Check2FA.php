@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Session;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
 
 class Check2FA
 {
@@ -17,14 +19,27 @@ class Check2FA
      */
     public function handle(Request $request, Closure $next)
     {
-        // if (!Session::has('user_2fa')) {
+        // if (!Session::has('token')) {
         //     return response()->json([
         //         'status' => 'error',
-        //         'message' => '2FA is required',
+        //         'token' => 'token is required',
         //         'data' => null
 
-        //     ]);
+        //     ], 401);
         // }
+
+        // try {
+        //     if (!$user = JWTAuth::parseToken()->authenticate()) {
+        //         return response()->json(['error' => 'User not found'], 404);
+        //     }
+        // } catch (TokenExpiredException $e) {
+        //     return response()->json(['token_expired'], $e->getStatusCode());
+        // } catch (TokenInvalidException $e) {
+        //     return response()->json(['token_invalid'], $e->getStatusCode());
+        // } catch (JWTException $e) {
+        //     return response()->json(['token_absent' => 'A token is required'], $e->getStatusCode());
+        // }
+    
         return $next($request);
     }
 }

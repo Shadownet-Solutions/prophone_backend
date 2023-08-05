@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('audience')->nullable();
+            $table->string('workspace')->nullable();
             $table->string('website')->nullable();
             $table->string('tags')->nullable();
             $table->integer('blocked')->nullable();

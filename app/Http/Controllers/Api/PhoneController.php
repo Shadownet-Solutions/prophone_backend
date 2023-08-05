@@ -11,6 +11,7 @@ use App\Models\Number;
 use App\Models\Message;
 use App\Models\Workspace;
 use App\Models\Contact;
+use App\Models\Campaign;
 use App\Models\Note;
 use Illuminate\Support\Facades\Auth;
 
@@ -140,6 +141,54 @@ class PhoneController extends Controller
                     ], 400);
                 }
 
+    // get dashboard data
+    public function analytics(){
+        $messages = Message::where('sender', Auth::id())->get()->count();
+        $unique =  Message::where('sender', Auth::id())->where('status', 'Sent')->get()->count();
+        $sent = Message::where('sender', Auth::id())->where('status', 'Sent')->get()->count();
+        $received = Message::where('sender', Auth::id())->where('status', 'Received')->get()->count();
+        $campaings = Campaign::where('status', 'in-progress')->get();
+
+
+
+        return response()->json([
+            'status' => 'success',
+            'messages' => $messages,
+            'unique' => $unique,
+            'sent' => $sent,
+            'received' => $received,
+            'campaigns' => $campaings
+            ], 200);
+    }
+
+    // get contacts belonging to a workspace
+    public function contacts($workspace){
+        $contacts = Contact::where('workspace', $workspace)->get();
+        if($contacts){  
+        return response()->json([
+            'status' => 'success',
+            'contacts' => $contacts
+            ], 200);
+        }
+        return response()->json([   
+            'status' => 'error',
+            'message' => 'No contacts found for the workspace'
+            ], 400);
+        }
+
+        // add note
+        public function add_note(Request $request){
+            $note = Note::create([
+                'note' => $request->note,
+                'contact' => $request->contact,
+                'created_by' => Auth::id(),
+                'workspace' => $request->workspace
+                ]);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Note added'
+                    ], 200);
+                }
 
 
 
