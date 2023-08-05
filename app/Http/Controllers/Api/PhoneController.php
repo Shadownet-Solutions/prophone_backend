@@ -141,7 +141,7 @@ class PhoneController extends Controller
                     ], 400);
                 }
 
-    // get dashboard data
+    // get dashboard data come back and modify campaigns
     public function analytics(){
         $messages = Message::where('sender', Auth::id())->get()->count();
         $unique =  Message::where('sender', Auth::id())->where('status', 'Sent')->get()->count();

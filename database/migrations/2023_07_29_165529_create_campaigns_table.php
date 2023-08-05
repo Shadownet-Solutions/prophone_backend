@@ -18,9 +18,11 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->string('number')->nullable();
+            $table->string('workspace')->nullable();
             $table->string('status')->nullable();
             $table->string('start_time')->nullable();
             $table->string('audience')->nullable();
+            $table->string('created_by')->nullable();
             $table->string('rate_control')->nullable();
             $table->timestamps();
         });
