@@ -320,7 +320,7 @@
               </tr>
               <tr>
                 <td>
-                  <p class="welcome-message" style="font-weight: 400; line-height: 30px; font-size: 1rem; padding: 0 44px">It looks like you&#39;re trying to log in to your He-Her account. To access your account, please use the one-time password (OTP) below;</p>
+                  <p class="welcome-message" style="font-weight: 400; line-height: 30px; font-size: 1rem; padding: 0 44px">It looks like you&#39;re trying to log in to your Prophone account. To access your account, please use the one-time password (OTP) below;</p>
                 </td>
               </tr>
               <tr>
@@ -340,7 +340,7 @@
               <tr>
                 <td>
                   <p class="welcome-message" style="font-weight: 400; line-height: 30px; font-size: 1rem; padding: 0 44px">This code expires in 5 minutes. <br />
-                    <br /> If you didn&#39;t initiate this login attempt, please change your password or contact <br /> our support team immediately via&nbsp; email <a href="mailto:support@he-her.com">support@he-her.com</a>
+                    <br /> If you didn&#39;t initiate this login attempt, please change your password or contact <br /> our support team immediately via&nbsp; email <a href="mailto:support@prophone.io">support@prophone.io</a>
                     <br /> &nbsp;
                   </p>
                 </td>
@@ -363,8 +363,8 @@
 									padding: 0 40px;
 									color: #6a7282;
 								">For any feedback or inquiries, get in touch with us at <br />
-                <a href="mailto:support@he-her.com">
-                  <span class="support">support@he-her.com</span>
+                <a href="mailto:support@prophone.io">
+                  <span class="support">support@prophone.io</span>
                 </a>
                 <br />
                

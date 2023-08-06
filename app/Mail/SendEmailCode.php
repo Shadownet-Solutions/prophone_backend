@@ -26,7 +26,7 @@ class SendEmailCode extends Mailable
 
     public function build()
     {
-        return $this->subject('Continue Login to He-her')
+        return $this->subject('Complete login to ProPhone')
                     ->view('emails.code');
     }
 

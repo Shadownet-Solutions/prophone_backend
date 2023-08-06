@@ -35,7 +35,6 @@ class CampaignController extends Controller
             return response()->json([
                     'status' => 'error',
                     'message' => 'No campaigns found'
-                    
                     ]);
                 }
         }

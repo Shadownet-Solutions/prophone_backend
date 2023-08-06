@@ -50,7 +50,7 @@ class AuthController extends Controller
                 'status' => 'success',
                 'message' => 'A code has been sent to your email, Valid for 5 minutes',
                 'user_id' => $user->id,
-                'Otp' => $code
+                // 'Otp' => $code
                 //  'token' => $token,
                     
                 ]);
@@ -99,7 +99,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'User Successfully Logged in',
-                'token' => $token,
+                // 'token' => $token,
                  'user' => $user
                  
                 ]);
@@ -174,12 +174,12 @@ public function resend()
                 ], 401);
                 }
             // $token = Auth::login($user);
-            $code = $user->generateCode($user->id);
+            $code = $user->generateCode($user);
             return response()->json([
                 'status' => 'success',
                 'message' => 'A code has been sent to your email, Valid for 5 minutes',
-                'user_id' => $user->id,
-                'Otp' => $code
+                'user_id' => $user->id
+                // 'Otp' => $code
                 //  'token' => $token,
                     
                 ]);
