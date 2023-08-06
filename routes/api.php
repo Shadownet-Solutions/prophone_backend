@@ -55,3 +55,6 @@ Route::post('/note', [PhoneController::class, 'add_note']);
 
 //get campaigns
 Route::get('/campaigns/{workspace}', [CampaignController::class, 'index']);
+
+//get audiences belonging to a workspace
+Route::get('/audiences/{workspace}', [CampaignController::class, 'index']);

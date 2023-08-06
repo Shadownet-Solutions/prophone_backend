@@ -45,7 +45,7 @@ class AuthController extends Controller
 
         // $token = Auth::login($user);
 
-        $code = $user->generateCode($user->id);
+        $code = $user->generateCode($user);
             return response()->json([
                 'status' => 'success',
                 'message' => 'A code has been sent to your email, Valid for 5 minutes',
@@ -68,7 +68,7 @@ class AuthController extends Controller
         }
 
     
-        // sign user in with otp
+        //Complete sign user in with otp
 
     public function completeSignIn(Request $request){
 
@@ -99,7 +99,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'User Successfully Logged in',
-                // 'token' => $token,
+                'token' => $token,
                  'user' => $user
                  
                 ]);
