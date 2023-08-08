@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Template extends Model
+class Invitation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'content',
-        'workspace',
-        'created_by'
+        'email',
+        'token',
+        'invited_by',
+        'role',
+        'status',
+        'workspace'
     ];
-
 }

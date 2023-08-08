@@ -41,51 +41,23 @@ class UserController extends Controller
     if ($request->has('name')) {
         $user->name = $request->name;
     }
-    if ($request->has('username')) {
-        $user->username = $request->username;
+    if ($request->has('company_name')) {
+        $user->company_name = $request->company_name;
     }
 
     if ($request->has('phone')) {
         $user->phone = $request->phone;
     }
 
-    if ($request->has('birthday')) {
-        $user->birthday = $request->birthday;
-    }
-
-    if ($request->has('status')) {
-        $user->status = $request->status;
-    }
-
-    if ($request->has('religion')) {
-        $user->religion = $request->religion;
-    }
-
-    if ($request->has('children')) {
-        $user->children = $request->children;
-    }
-
-    if ($request->has('smoke')) {
-        $user->smoke = $request->smoke;
-    }
-
-    if ($request->has('drink')) {
-        $user->drink = $request->drink;
-    }
-
-    if ($request->has('education')) {
-        $user->education = $request->education;
-    }
-
     if ($request->has('address')) {
         $user->address = $request->address;
     }
+
+
     if ($request->has('profile_image')) {
         $user->profile_image = $request->profile_image;
     }
-    if ($request->has('cordinates')) {
-        $user->cordinates = $request->cordinates;
-    }
+    
 
     $user->save();
 

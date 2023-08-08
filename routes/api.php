@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PhoneController;
 use App\Http\Controllers\Api\WorkspaceController;
 use App\Http\Controllers\Api\CampaignController;
+use App\Http\Controllers\Api\AudienceController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -57,4 +58,22 @@ Route::post('/note', [PhoneController::class, 'add_note']);
 Route::get('/campaigns/{workspace}', [CampaignController::class, 'index']);
 
 //get audiences belonging to a workspace
-Route::get('/audiences/{workspace}', [CampaignController::class, 'index']);
+Route::get('/audiences/{workspace}', [AudienceController::class, 'index']);
+
+//get template list
+Route::get('/templates/{workspace}', [PhoneController::class, 'templates']);
+
+//create template
+Route::post('/createTemplate', [PhoneController::class, 'createTemplate']);
+
+//create workspace
+Route::post('/createWorkspace', [WorkspaceController::class, 'create']);
+
+//invite members
+Route::post('/invite', [WorkspaceController::class, 'invite']);
+
+//set password
+Route::post('/setPassword', [AuthController::class, 'setPassword']);
+
+//get feedback
+Route::post('/feedback', [WorkspaceController::class, 'feedback']);

@@ -67,7 +67,29 @@ class AuthController extends Controller
             ]);
         }
 
+        //set password
+    public function setPassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|min:6',
+            'user_id' => 'required'
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()->first()
+                ], 422);
+                }
+            $user = User::find($request->user_id);
+            $user->password = bcrypt($request->password);
+            $user->save();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Password successfully set'
+                ]);
+                }
     
+
+
         //Complete sign user in with otp
 
     public function completeSignIn(Request $request){
@@ -146,8 +168,43 @@ public function resend()
 }
 
 
-// login and send otp after validating username
+
+
+// login with password or send otp after validating only username
     public function login(Request $request){
+
+        //if request has password
+        if($request->has('password')) {
+            $credentials = request(['email', 'password']);
+        
+            // Check if the email exists
+            $user = User::where('email', $credentials['email'])->first();
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Incorrect email'
+                ], 401);
+            }
+        
+            // Check the password
+            if (!Auth::attempt($credentials)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Wrong password'
+                ], 401);
+            }
+        
+            $token = Auth::login($user);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User Successfully Logged in',
+                'token' => $token,
+                'user' => $user
+            ], 200);
+        }
+        
+
+
        
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -179,8 +236,6 @@ public function resend()
                 'status' => 'success',
                 'message' => 'A code has been sent to your email, Valid for 5 minutes',
                 'user_id' => $user->id
-                // 'Otp' => $code
-                //  'token' => $token,
                     
                 ]);
 

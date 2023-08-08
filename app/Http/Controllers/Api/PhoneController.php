@@ -12,6 +12,7 @@ use App\Models\Message;
 use App\Models\Workspace;
 use App\Models\Contact;
 use App\Models\Campaign;
+use App\Models\Template;
 use App\Models\Note;
 use Illuminate\Support\Facades\Auth;
 
@@ -189,6 +190,37 @@ class PhoneController extends Controller
                     'message' => 'Note added'
                     ], 200);
                 }
+
+    //get templates using workspace id
+    public function templates($workspace){
+        $templates = Template::where('workspace', $workspace)->get();
+        if($templates->isNotEmpty()){
+            return response()->json([
+                'status' => 'success',
+                'templates' => $templates
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No templates found for the workspace'
+                    ], 400);
+            }
+
+        }
+
+    // create template
+    public function createTemplate(Request $request){
+        $template = Template::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'created_by' => Auth::id(),
+            'workspace' => $request->workspace
+            ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Template created'
+                ], 200);
+            }
 
 
 
