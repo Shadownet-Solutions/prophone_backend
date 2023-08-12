@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use Session;
 use App\Models\User;
-use App\Models\Workspace;
+use app\Models\Workspace;
 use App\Models\Feedback;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\App;
+
 use Mail;
 use Str;
 use App\Models\Invitation;
