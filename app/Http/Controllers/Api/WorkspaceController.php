@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Session;
 use App\Models\User;
-use app\Models\Workspace;
+use App\Models\WorkSpace;
 use App\Models\Feedback;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
