@@ -29,6 +29,14 @@ class PhoneController extends Controller
 
 //provission number
     public function provision(Request $request){
+        //check if the user has a workspace if not return error
+        $workspace = Workspace::where('workspace', Auth::id())->first();
+        if(!$workspace){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You do not have a workspace, Please create one be added to one'
+                ], 400);
+                }
         $current_number = Number::where('created_by', Auth::id())->first();
         if($current_number){
             return response()->json([
@@ -57,6 +65,23 @@ class PhoneController extends Controller
 
 //get numbers associated to a workspace
     public function numbers(){
+        //check if the user has a workspace if not return error
+        $workspace = Workspace::where('workspace', Auth::id())->first();
+        if(!$workspace){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You do not have a workspace, Please create one be added to one'
+                ], 400);
+                }
+        $current_number = Number::where('workspace', $workspace->id)->first();
+        if($current_number){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You already have a number in your current workspace'
+                ], 400);
+            }
+
+
         $numbers = Number::where('created_by', Auth::id())->get();
         return response()->json([
             'status' => 'success',

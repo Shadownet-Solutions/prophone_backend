@@ -22,6 +22,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         '2fa' => \App\Http\Middleware\Check2FA::class,
+        \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
