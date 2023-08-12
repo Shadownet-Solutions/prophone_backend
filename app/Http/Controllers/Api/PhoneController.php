@@ -9,7 +9,7 @@ use Validator;
 use App\Models\User;
 use App\Models\Number;
 use App\Models\Message;
-use App\Models\Workspace;
+use App\Models\WorkSpace;
 use App\Models\Contact;
 use App\Models\Campaign;
 use App\Models\Template;
