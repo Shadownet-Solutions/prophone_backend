@@ -27,7 +27,7 @@ class PhoneController extends Controller
     }
 
 
-//provission number
+//provision number
     public function provision(Request $request){
         //check if the user has a workspace if not return error
         $workspace = Workspace::where('workspace', Auth::id())->first();
@@ -37,7 +37,7 @@ class PhoneController extends Controller
                 'message' => 'You do not have a workspace, Please create one be added to one'
                 ], 400);
                 }
-        $current_number = Number::where('created_by', Auth::id())->first();
+        $current_number = Number::where('workspace', $workspace->id)->first();
         if($current_number){
             return response()->json([
                 'status' => 'error',
@@ -73,16 +73,8 @@ class PhoneController extends Controller
                 'message' => 'You do not have a workspace, Please create one be added to one'
                 ], 400);
                 }
-        $current_number = Number::where('workspace', $workspace->id)->first();
-        if($current_number){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'You already have a number in your current workspace'
-                ], 400);
-            }
 
-
-        $numbers = Number::where('created_by', Auth::id())->get();
+        $numbers = Number::where('workspace', $workspace->id)->get();
         return response()->json([
             'status' => 'success',
             'numbers' => $numbers
@@ -189,6 +181,15 @@ class PhoneController extends Controller
 
     // get contacts belonging to a workspace
     public function contacts($workspace){
+         //check if the user has a workspace if not return error
+         $workspace = Workspace::where('workspace', Auth::id())->first();
+         if(!$workspace){
+             return response()->json([
+                 'status' => 'error',
+                 'message' => 'You do not have a workspace, Please create one be added to one'
+                 ], 400);
+                 }
+        
         $contacts = Contact::where('workspace', $workspace)->get();
         if($contacts){  
         return response()->json([
