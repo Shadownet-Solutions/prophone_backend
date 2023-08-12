@@ -30,7 +30,7 @@ class PhoneController extends Controller
 //provision number
     public function provision(Request $request){
         //check if the user has a workspace if not return error
-        $workspace = Workspace::where('workspace', Auth::id())->first();
+        $workspace = WorkSpacewhere('workspace', Auth::id())->first();
         if(!$workspace){
             return response()->json([
                 'status' => 'error',
@@ -66,7 +66,7 @@ class PhoneController extends Controller
 //get numbers associated to a workspace
     public function numbers(){
         //check if the user has a workspace if not return error
-        $workspace = Workspace::where('workspace', Auth::id())->first();
+        $workspace = WorkSpacewhere('workspace', Auth::id())->first();
         if(!$workspace){
             return response()->json([
                 'status' => 'error',
@@ -182,7 +182,7 @@ class PhoneController extends Controller
     // get contacts belonging to a workspace
     public function contacts($workspace){
          //check if the user has a workspace if not return error
-         $workspace = Workspace::where('workspace', Auth::id())->first();
+         $workspace = WorkSpacewhere('workspace', Auth::id())->first();
          if(!$workspace){
              return response()->json([
                  'status' => 'error',
