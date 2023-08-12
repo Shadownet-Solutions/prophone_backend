@@ -9,6 +9,7 @@ use App\Models\Feedback;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\App;
 use Mail;
 use Str;
 use App\Models\Invitation;
@@ -87,6 +88,13 @@ class WorkspaceController extends Controller
                         ], 400);
                         }
                 // If the member is registered, update the workspace ID
+                // check that member doesn't already belong to a workspace
+                if ($member->workspace) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'User already belongs to a workspace'
+                        ], 400);
+                    }
                 $member->workspace = $workspace->id;
                 $member->save();
     

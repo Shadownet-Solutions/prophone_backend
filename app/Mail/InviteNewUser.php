@@ -30,7 +30,7 @@ class InviteNewUser extends Mailable
     public function build()
     {
         
-        $url = "https://app.ptophone.io/sign-up/invite?token={$this->invitation->token}";
+        $url = "https://app.prophone.io/register/invite?token={$this->invitation->token}";
 
 
         return $this->subject('You have been added to a workspace')
