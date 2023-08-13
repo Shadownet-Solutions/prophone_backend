@@ -22,8 +22,10 @@ class AudienceController extends Controller
 
 
     // get audiences that belongs to a workspace
-    public function index($workspace){
-        $audiences = Audience::where('workspace', $workspace)->withCount('contacts')->get();
+    public function index(){
+        $user = Auth::user();
+
+        $audiences = Audience::where('workspace', $user->workspace)->withCount('contacts')->get();
 
         if($audiences->isNotEmpty()){
             return response()->json([
@@ -38,5 +40,26 @@ class AudienceController extends Controller
         }
         
     }
+
+    public function create(Request $request){
+        $user = Auth::user();
+        $workspace = Workspace::find($user->workspace);
+        $request->validate([
+            'title' => 'required'
+        ]);
+        $audience = new Audience;
+        $audience->title = $request->title;
+        $audience->description = $request->description;
+        $audience->workspace = $workspace->id;
+        $created_by = $user->id;
+        $audience->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Audience created successfully, you can add contacts now',
+            ]);
+        
+    }
+
+
 
 }

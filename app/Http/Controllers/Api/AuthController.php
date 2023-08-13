@@ -205,7 +205,7 @@ public function resend()
         
 
 
-       
+       // for only email
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
         ]);

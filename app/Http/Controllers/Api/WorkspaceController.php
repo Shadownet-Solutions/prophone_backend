@@ -8,8 +8,9 @@ use App\Models\WorkSpace;
 use App\Models\Feedback;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Audience;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\Template;
 use Mail;
 use Str;
 use App\Models\Invitation;
@@ -41,8 +42,16 @@ class WorkspaceController extends Controller
 
      // create workspace
      public function create(Request $request) {
+        
          $user = Auth::user();
-         $workspace = new Workspace;
+         //check if user already has a workspace
+         if ($user->workspace) {
+             return response()->json([
+                 'status' => 'error',
+                 'message' => 'You already have a workspace'
+                 ], 400);
+                 }
+         $workspace = new WorkSpace;
          $workspace->title = $request->title;
          $workspace->description = $request->description;
          $workspace->image = $request->image;
@@ -72,11 +81,11 @@ class WorkspaceController extends Controller
                 'message' => 'Workspace not found, Please create one first'
                 ], 404);
                 }
+
         // Check if the email is already registered
         $member = User::where('email', $request->email)->first();
         
 
-        
 
         try {
             if ($member) {
@@ -151,5 +160,37 @@ class WorkspaceController extends Controller
      
      
      
+    //get templates using workspace id
+    public function templates($workspace){
+        $templates = Template::where('workspace', $workspace)->get();
+        if($templates->isNotEmpty()){
+            return response()->json([
+                'status' => 'success',
+                'templates' => $templates
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No templates found for the workspace'
+                    ], 400);
+            }
+
+        }
+
+        // create template
+    public function createTemplate(Request $request){
+        $user = Auth::user();
+        $workspace = Workspace::find($user->workspace);
+        $template = Template::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'created_by' => Auth::id(),
+            'workspace' => $workspace->id,
+            ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Template created'
+                ], 200);
+            }
      
 }

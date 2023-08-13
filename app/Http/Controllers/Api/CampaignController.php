@@ -26,7 +26,7 @@ class CampaignController extends Controller
     //get all campaigns
     public function index($workspace) {
         $campaigns = Campaign::where('workspace', $workspace)->get();
-        if($campaigns) {
+        if($campaigns->isNotEmpty()) {
         return response()->json([
             'status' => 'success',
             'data' => $campaigns
@@ -34,7 +34,7 @@ class CampaignController extends Controller
         } else {
             return response()->json([
                     'status' => 'error',
-                    'message' => 'No campaigns found'
+                    'message' => 'No Campaigns Yet'
                     ]);
                 }
         }

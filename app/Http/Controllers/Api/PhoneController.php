@@ -15,6 +15,7 @@ use App\Models\Campaign;
 use App\Models\Template;
 use App\Models\Note;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
 class PhoneController extends Controller
@@ -29,19 +30,24 @@ class PhoneController extends Controller
 
 //provision number
     public function provision(Request $request){
+        $user = Auth::user();
         //check if the user has a workspace if not return error
-        $workspace = WorkSpace::where('workspace', Auth::id())->first();
-        if(!$workspace){
+        
+        if(!$user->workspace){
             return response()->json([
                 'status' => 'error',
                 'message' => 'You do not have a workspace, Please create one be added to one'
                 ], 400);
                 }
+        $workspace = WorkSpace::where('id', $user->workspace)->first();
+
         $current_number = Number::where('workspace', $workspace->id)->first();
+
+        // dd($workspace);
         if($current_number){
             return response()->json([
                 'status' => 'error',
-                'message' => 'You already have a number'
+                'message' => 'You already have a number to get additional number contact your workspace administrator'
                 ], 400);
             }
             $number = Number::create([
@@ -49,8 +55,8 @@ class PhoneController extends Controller
                 'number' => rand(1000000000, 9999999999),
                 'label' => $request->label,
                 'description' => 'Personal number',
-                'workspace' => $request->workspace,
-                'company_name' => $request->company_name,
+                'workspace' => $workspace->id,
+                // 'company_name' => $request->company_name,
                 'status' => 'Active',
 
                 ]);
@@ -65,14 +71,18 @@ class PhoneController extends Controller
 
 //get numbers associated to a workspace
     public function numbers(){
+
+        $user = Auth::user();
         //check if the user has a workspace if not return error
-        $workspace = WorkSpace::where('workspace', Auth::id())->first();
-        if(!$workspace){
+        
+        if(!$user->workspace){
             return response()->json([
                 'status' => 'error',
                 'message' => 'You do not have a workspace, Please create one be added to one'
                 ], 400);
                 }
+        $workspace = WorkSpace::where('id', $user->workspace)->first();
+        
 
         $numbers = Number::where('workspace', $workspace->id)->get();
         return response()->json([
@@ -84,9 +94,37 @@ class PhoneController extends Controller
 
 // get inbox messages
     public function inbox($number_id){
+        $user = Auth::user();
         $number = Number::find($number_id);
         if($number){
-            $messages = Message::where('number', $number_id)->get();
+
+            $latestMessages = Message::select('messages.*')
+            ->where('number', $number_id)
+            ->joinSub(
+                Message::select('receiver', DB::raw('MAX(created_at) as max_created_at'))
+                    ->groupBy('receiver'),
+                'latest',
+                function ($join) {
+                    $join->on('messages.receiver', '=', 'latest.receiver')
+                        ->On('messages.created_at', '=', 'latest.max_created_at');
+                }
+            )
+            ->orderBy('messages.created_at', 'desc')
+            ->take(10)
+            ->get();
+            
+            return response()->json([
+                'status' => 'successs',
+                'messages' => $latestMessages
+                ], 200);
+
+
+
+
+
+
+            $messages = $message->getInbox($number_id);
+            // $messages = Message::where('number', $number_id)->get();
             return response()->json([
                 'status' => 'success',
                 'messages' => $messages
@@ -101,15 +139,17 @@ class PhoneController extends Controller
 
 //send message to a single number
     public function send(Request $request){
+        $user = Auth::user();
+        $workspace = WorkSpace::where('id', $user->workspace)->first();
         $number = Number::find($request->number);
         if($number){
             $message = Message::create([
                 'number' => $request->number,
                 'content' => $request->message,
-                'sender' => Auth::id(),
+                'sender' => $user->id,
                 'type' => 'sent',
                 'receiver' => $request->receiver,
-                'workspace' => $request->workspace,
+                'workspace' => $workspace->id,
                 'status' => 'Sent',
                 ]);
                 return response()->json([
@@ -127,7 +167,9 @@ class PhoneController extends Controller
 //get a single conversation
 
     public function conversation(Request $request){
+        $user = Auth::user();
         $number = Number::find($request->number);
+        $workspace = WorkSpace::where('id', $user->workspace)->first();
         if($number){
             $messages = Message::where('number', $request->number)->where('receiver', $request->receiver)->orWhere('sender', $request->receiver)->get();
             return response()->json([
@@ -182,7 +224,8 @@ class PhoneController extends Controller
     // get contacts belonging to a workspace
     public function contacts($workspace){
          //check if the user has a workspace if not return error
-         $workspace = WorkSpace::where('workspace', Auth::id())->first();
+         $user = Auth::user();
+         $workspace = WorkSpace::where('id', $user->workspace)->first();
          if(!$workspace){
              return response()->json([
                  'status' => 'error',
@@ -217,36 +260,8 @@ class PhoneController extends Controller
                     ], 200);
                 }
 
-    //get templates using workspace id
-    public function templates($workspace){
-        $templates = Template::where('workspace', $workspace)->get();
-        if($templates->isNotEmpty()){
-            return response()->json([
-                'status' => 'success',
-                'templates' => $templates
-                ], 200);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'No templates found for the workspace'
-                    ], 400);
-            }
 
-        }
-
-    // create template
-    public function createTemplate(Request $request){
-        $template = Template::create([
-            'title' => $request->title,
-            'content' => $request->content,
-            'created_by' => Auth::id(),
-            'workspace' => $request->workspace
-            ]);
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Template created'
-                ], 200);
-            }
+    
 
 
 

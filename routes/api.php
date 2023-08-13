@@ -60,13 +60,16 @@ Route::post('/note', [PhoneController::class, 'add_note']);
 Route::get('/campaigns/{workspace}', [CampaignController::class, 'index']);
 
 //get audiences belonging to a workspace
-Route::get('/audiences/{workspace}', [AudienceController::class, 'index']);
+Route::get('/audiences', [AudienceController::class, 'index']);
+
+//create audience
+Route::post('/create-audience', [AudienceController::class, 'create']);
 
 //get template list
-Route::get('/templates/{workspace}', [PhoneController::class, 'templates']);
+Route::get('/templates/{workspace}', [WorkspaceController::class, 'templates']);
 
 //create template
-Route::post('/createTemplate', [PhoneController::class, 'createTemplate']);
+Route::post('/createTemplate', [WorkspaceController::class, 'createTemplate']);
 
 //create workspace
 Route::post('/createWorkspace', [WorkspaceController::class, 'create']);
