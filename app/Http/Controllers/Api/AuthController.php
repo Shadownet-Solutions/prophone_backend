@@ -258,11 +258,7 @@ public function resend()
                     'status' => 'error',
                     'message' => $validator->errors()->first()
                     ], 422);
-        $user = User::create([
-            'email' => $request->email,
-            'image' => $request->image,
-            'name' => $request->name,
-        ]);
+        
     }
 
 
@@ -280,6 +276,8 @@ public function resend()
     } else {
         $user = User::create([
             'email' => $request->email,
+            'image' => $request->image,
+            'name' => $request->name,
             ]);
             $token = Auth::login($user);
             return response()->json([
