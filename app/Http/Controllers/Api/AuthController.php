@@ -260,6 +260,8 @@ public function resend()
                     ], 422);
         $user = User::create([
             'email' => $request->email,
+            'image' => $request->image,
+            'name' => $request->name,
         ]);
     }
 
