@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\AudienceController;
 
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('socialLogin', [AuthController::class, 'socialLogin']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/completeSignIn', [AuthController::class, 'completeSignIn']);
 Route::get('/user', [UserController::class, 'userProfile']);

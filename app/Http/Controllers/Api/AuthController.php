@@ -23,6 +23,7 @@ class AuthController extends Controller
                 'login',
                 'register',
                 'completeSignIn',
+                'socialLogin'
                 ]
         ]);
     }
@@ -33,7 +34,10 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first()
+            ], 422);
         }
        
 
@@ -204,6 +208,8 @@ public function resend()
         }
         
 
+        
+
 
        // for only email
         $validator = Validator::make($request->all(), [
@@ -242,6 +248,45 @@ public function resend()
     }
 
 
-    
+    //accept details check if emaail exists if yes log user in else register and log user in
+    public function socialLogin(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email'
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()->first()
+                    ], 422);
+        $user = User::create([
+            'email' => $request->email,
+        ]);
+    }
+
+
+    //check if user exist and log in else register and log user in
+    $user = User::where('email', $request->email)->first();
+    if($user){
+       
+        $token = Auth::login($user);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User Successfully Logged in',
+            'token' => $token,
+            'user' => $user
+            ]);         
+    } else {
+        $user = User::create([
+            'email' => $request->email,
+            ]);
+            $token = Auth::login($user);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User Successfully Logged in',
+                'token' => $token,
+                'user' => $user
+                ]);
+            }
+}
 
 }

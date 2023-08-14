@@ -40,6 +40,7 @@ class WorkspaceController extends Controller
      
      }
 
+
      // create workspace
      public function create(Request $request) {
         
