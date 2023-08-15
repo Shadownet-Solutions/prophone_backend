@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Session;
 use App\Models\User;
-use App\Models\Workspace;
+use App\Models\WorkSpace;
 use App\Models\Audience;
 use App\Models\Contact;
 use App\Http\Controllers\Controller;
@@ -43,20 +43,30 @@ class AudienceController extends Controller
 
     public function create(Request $request){
         $user = Auth::user();
-        $workspace = Workspace::find($user->workspace);
+        $workspace = WorkSpace::find($user->workspace);
+        //validate request
         $request->validate([
             'title' => 'required'
         ]);
-        $audience = new Audience;
-        $audience->title = $request->title;
-        $audience->description = $request->description;
-        $audience->workspace = $workspace->id;
-        $created_by = $user->id;
-        $audience->save();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Audience created successfully, you can add contacts now',
-            ]);
+        if ($workspace){
+            $audience = new Audience;
+            $audience->title = $request->title;
+            $audience->description = $request->description;
+            $audience->workspace = $workspace->id;
+            $created_by = $user->id;
+            $audience->save();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Audience created successfully, you can add contacts now',
+                ]);
+
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Workspace not found'
+                ]);
+            }
+       
         
     }
 
