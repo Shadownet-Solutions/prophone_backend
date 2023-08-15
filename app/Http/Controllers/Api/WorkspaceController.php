@@ -30,11 +30,21 @@ class WorkspaceController extends Controller
      //get team members
       public function getTeamMembers() {
          $user = Auth::user();
+        $workspace = WorkSpace::find($user->workspace);
+        if ($workspace) {
          $team = User::where('workspace', $user->workspace)->get();
-         return response()->json([
-             'status' => 'success',
-             'team' => $team
-         ], 200);
+            return response()->json([
+                'status' => 'success',
+                'team' => $team
+            ], 200);
+
+         } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You do not have a workspace'
+                ], 404);
+         }
+         
      
      
      
