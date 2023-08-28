@@ -24,6 +24,12 @@ class AudienceController extends Controller
     // get audiences that belongs to a workspace
     public function index(){
         $user = Auth::user();
+        if (!$user){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'session expired'
+                ], 401);
+        }
 
         $audiences = Audience::where('workspace', $user->workspace)->withCount('contacts')->get();
 
@@ -35,9 +41,13 @@ class AudienceController extends Controller
         } else {
             return response()->json([
                 'status' => 'error',
-                'data' => 'No audiences found'
+                'data' => 'You have not created an audience yet'
             ], 404);
         }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Workspace not found'
+            ]);
         
     }
 

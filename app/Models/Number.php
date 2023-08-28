@@ -13,6 +13,7 @@ class Number extends Model
         'created_by',
         'number',
         'label',
+        'type',
         'description',
         'workspace',
         'company_name',

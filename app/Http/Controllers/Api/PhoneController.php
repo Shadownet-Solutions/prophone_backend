@@ -11,6 +11,7 @@ use App\Models\Number;
 use App\Models\Message;
 use App\Models\WorkSpace;
 use App\Models\Contact;
+use App\Models\SingleContact;
 use App\Models\Campaign;
 use App\Models\Template;
 use App\Models\Note;
@@ -25,14 +26,21 @@ class PhoneController extends Controller
 
     public function __construct() {
         $this->middleware('auth:api');
+        
     }
 
 
 //provision number
     public function provision(Request $request){
         $user = Auth::user();
-        //check if the user has a workspace if not return error
         
+        if (!$user ){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'session not active'
+                ], 401);
+        }
+        //check if the user has a workspace if not return error
         if(!$user->workspace){
             return response()->json([
                 'status' => 'error',
@@ -43,7 +51,7 @@ class PhoneController extends Controller
 
         $current_number = Number::where('workspace', $workspace->id)->first();
 
-        // dd($workspace);
+       // already have a number and proccess new number at $5
         if($current_number){
             return response()->json([
                 'status' => 'error',
@@ -54,6 +62,7 @@ class PhoneController extends Controller
                 'created_by' => Auth::id(),
                 'number' => rand(1000000000, 9999999999),
                 'label' => $request->label,
+                'type' => 'Toll Free',
                 'description' => 'Personal number',
                 'workspace' => $workspace->id,
                 // 'company_name' => $request->company_name,
@@ -91,45 +100,67 @@ class PhoneController extends Controller
             ], 200);
         }
 
+     // get numbers createdm and associated to a user
+     public function user_numbers(){
+        $user = Auth::user();
+        //check if user is logged
+        if (!$user ){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'session not active'
+                ], 401);
+            }
+        $numbers = Number::where('type', 'Toll Free')->get();
+        return response()->json([
+            'status' => 'success',
+            'numbers' => $numbers
+            ], 200);
+        
+
+
+        
+     }
 
 // get inbox messages
     public function inbox($number_id){
         $user = Auth::user();
         $number = Number::find($number_id);
         if($number){
+            // get one message per phoneNumber and order by latest
 
             $latestMessages = Message::select('messages.*')
             ->where('number', $number_id)
             ->joinSub(
-                Message::select('receiver', DB::raw('MAX(created_at) as max_created_at'))
-                    ->groupBy('receiver'),
+                Message::select('PhoneNumber', DB::raw('MAX(created_at) as max_created_at'))
+                    ->groupBy('PhoneNumber'),
                 'latest',
                 function ($join) {
-                    $join->on('messages.receiver', '=', 'latest.receiver')
-                        ->On('messages.created_at', '=', 'latest.max_created_at');
+                    $join->on('messages.PhoneNumber', '=', 'latest.PhoneNumber')
+                        ->on('messages.created_at', '=', 'latest.max_created_at');
                 }
             )
             ->orderBy('messages.created_at', 'desc')
             ->take(10)
             ->get();
-            
-            return response()->json([
-                'status' => 'successs',
-                'messages' => $latestMessages
-                ], 200);
+
+        return response()->json([
+            'status' => 'success',
+            'messages' => $latestMessages
+        ], 200);
 
 
-
-
-
-
-            $messages = $message->getInbox($number_id);
-            // $messages = Message::where('number', $number_id)->get();
-            return response()->json([
-                'status' => 'success',
-                'messages' => $messages
-                ], 200);
             }
+
+
+
+
+            // $messages = $message->getInbox($number_id);
+            // // $messages = Message::where('number', $number_id)->get();
+            // return response()->json([
+            //     'status' => 'success',
+            //     'messages' => $messages
+            //     ], 200);
+            
 
         return response()->json([
             'status' => 'error',
@@ -140,17 +171,25 @@ class PhoneController extends Controller
 //send message to a single number
     public function send(Request $request){
         $user = Auth::user();
-        $workspace = WorkSpace::where('id', $user->workspace)->first();
+        if (!$user ){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'session not active'
+                ], 401);
+                }
+        
         $number = Number::find($request->number);
+
         if($number){
             $message = Message::create([
                 'number' => $request->number,
-                'content' => $request->message,
-                'sender' => $user->id,
-                'type' => 'sent',
-                'receiver' => $request->receiver,
+                'phoneNumber' => $request->to,
+                'body' => $request->message,
+                'from' => $user->id,
+                'type' => 'outgoing',
+                'to' => $request->to,
                 'workspace' => $workspace->id,
-                'status' => 'Sent',
+                'status' => 'completed',
                 ]);
                 return response()->json([
                     'status' => 'success',
@@ -169,9 +208,9 @@ class PhoneController extends Controller
     public function conversation(Request $request){
         $user = Auth::user();
         $number = Number::find($request->number);
-        $workspace = WorkSpace::where('id', $user->workspace)->first();
+        
         if($number){
-            $messages = Message::where('number', $request->number)->where('receiver', $request->receiver)->orWhere('sender', $request->receiver)->get();
+            $messages = Message::where('number', $request->number)->where('phoneNumber', $request->phoneNumber)->get();
             return response()->json([
                 'status' => 'success',
                 'messages' => $messages
@@ -183,25 +222,63 @@ class PhoneController extends Controller
                 ], 400);
             }
 
+
 //get a single contact details and notes associated
 
-        public function contact($id){
-            $contact = Contact::find($id);
-            if($contact){
-                $notes = Note::where('contact', $id)->get();
-                return response()->json([
+        public function contact($phone){
+            $contact = SingleContact::where('phone', $phone)->first();
+           
+
+            if(!$contact){
+                $newContact = SingleContact::create([
+                    'phone' => $phone,
+                    'userId' => Auth::user()->id,
+                    ]);
+                    
+                    return response()->json([
+                        'status' => 'success',
+                        'contact' => $newContact
+                        ], 200);
+                    } else {
+
+                    $notes = Note::where('contact', $phone)->get();
+                    return response()->json([
                     'status' => 'success',
                     'contact' => $contact,
                     'notes' => $notes
                     ], 200);
-                }
+
+
+
+                    }
+
+
+
                 return response()->json([
                     'status' => 'error',
                     'message' => 'contact not found'
                     ], 400);
                 }
 
-    // get dashboard data come back and modify campaigns
+    //update singlecontact information
+    public function update_contact(Request $request){
+        $contact = SingleContact::find($request->contact);
+        if($contact){
+                $contact->update($request->all());
+                return response()->json([
+                    'status' => 'success',
+                    'contact' => $contact
+                    ], 200);
+                    }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'contact not found'
+            ], 400);
+            }
+
+
+
+    // get dashboard data 
     public function analytics(){
         $messages = Message::where('sender', Auth::id())->get()->count();
         $unique =  Message::where('sender', Auth::id())->where('status', 'Sent')->get()->count();
@@ -248,11 +325,11 @@ class PhoneController extends Controller
 
         // add note
         public function add_note(Request $request){
+
             $note = Note::create([
                 'note' => $request->note,
                 'contact' => $request->contact,
                 'created_by' => Auth::id(),
-                'workspace' => $request->workspace
                 ]);
                 return response()->json([
                     'status' => 'success',

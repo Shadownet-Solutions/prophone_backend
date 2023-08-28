@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Contact extends Model
+class Card extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-        'created_by',
-        'blocked'
+        'holder_name',
+        'number',
+        'expiration_date',
+        'cvv',
+        'zip_code',
+        'user_id'
     ];
 }

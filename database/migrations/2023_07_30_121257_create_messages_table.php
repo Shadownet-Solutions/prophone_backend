@@ -15,11 +15,13 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
+            $table->string('phoneNumber')->nullable();
+            $table->foreignId('userId')->nullable();
             $table->string('content')->nullable();
-            $table->string('receiver')->nullable();
+            $table->string('to')->nullable();
             $table->string('number')->nullable();
             $table->string('type')->nullable();
-            $table->string('sender')->nullable();
+            $table->string('from')->nullable();
             $table->string('status')->nullable();
             $table->string('workspace')->nullable();
             $table->timestamps();

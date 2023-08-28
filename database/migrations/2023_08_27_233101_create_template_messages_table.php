@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('templates', function (Blueprint $table) {
+        Schema::create('template_messages', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
-            $table->string('workspace')->nullable();
+            $table->string('body');
+            $table->foreignId('template_id')->constrained('templates');
             $table->string('created_by')->nullable();
-            $table->string('updated_by')->nullable();
-            $table->string('deleted_by')->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('templates');
+        Schema::dropIfExists('template_messages');
     }
 };

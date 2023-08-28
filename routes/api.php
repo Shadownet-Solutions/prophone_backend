@@ -38,12 +38,15 @@ Route::post('/provision', [PhoneController::class, 'provision']);
 Route::get('/numbers', [PhoneController::class, 'numbers']);
 //get inbox with number id
 Route::get('/inbox/{number_id}', [PhoneController::class, 'inbox']);
+
+//get number created by the user
+Route::get('/user_numbers', [PhoneController::class, 'user_numbers']);
 //send message
 Route::post('/send', [PhoneController::class, 'send']);
 //get a sigle message conversation
 Route::post('/conversation', [PhoneController::class, 'conversation']);
 //get details of a contact
-Route::get('/contact/{id}', [PhoneController::class, 'contact']);
+Route::get('/contact/{phone}', [PhoneController::class, 'contact']);
 //get dashboard data
 Route::get('/analytics', [PhoneController::class, 'analytics']);
 
@@ -67,7 +70,7 @@ Route::get('/audiences', [AudienceController::class, 'index']);
 Route::post('/create-audience', [AudienceController::class, 'create']);
 
 //get template list
-Route::get('/templates/{workspace}', [WorkspaceController::class, 'templates']);
+Route::get('/templates', [WorkspaceController::class, 'templates']);
 
 //create template
 Route::post('/createTemplate', [WorkspaceController::class, 'createTemplate']);
@@ -83,3 +86,18 @@ Route::post('/setPassword', [AuthController::class, 'setPassword']);
 
 //get feedback
 Route::post('/feedback', [WorkspaceController::class, 'feedback']);
+
+//update contact info
+Route::patch('/updateContact', [PhoneController::class, 'update_contact']);
+
+//get template messages
+Route::get('/templateMessages/{template_id}', [WorkspaceController::class, 'templateMessages']);
+
+//create template message
+Route::post('/createTemplateMessage', [WorkspaceController::class, 'createTemplateMessage']);
+
+//delete template message
+Route::delete('/deleteTemplateMessage/{template_message_id}', [WorkspaceController::class, 'deleteTemplateMessage']);
+
+//modify template message
+Route::patch('/modifyTemplateMessage', [WorkspaceController::class, 'modifyTemplateMessage']);
