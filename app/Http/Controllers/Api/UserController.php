@@ -38,9 +38,12 @@ class UserController extends Controller
 {
     $user = Auth::user();
 
-    if ($request->has('name')) {
+    if ($request->has('first_name')) {
         $user->name = $request->name;
     }
+    if ($request->has('last_name')) {
+        $user->last_name = $request->last_name;
+        }
     if ($request->has('company_name')) {
         $user->company_name = $request->company_name;
     }
