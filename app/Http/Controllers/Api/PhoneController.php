@@ -44,7 +44,7 @@ class PhoneController extends Controller
         if(!$user->workspace){
             return response()->json([
                 'status' => 'error',
-                'message' => 'You do not have a workspace, Please create one be added to one'
+                'message' => 'You do not have a workspace, Please create one or be added to one'
                 ], 400);
                 }
         $workspace = WorkSpace::where('id', $user->workspace)->first();
@@ -131,11 +131,11 @@ class PhoneController extends Controller
             $latestMessages = Message::select('messages.*')
             ->where('number', $number_id)
             ->joinSub(
-                Message::select('PhoneNumber', DB::raw('MAX(created_at) as max_created_at'))
-                    ->groupBy('PhoneNumber'),
+                Message::select('phoneNumber', DB::raw('MAX(created_at) as max_created_at'))
+                    ->groupBy('phoneNumber'),
                 'latest',
                 function ($join) {
-                    $join->on('messages.PhoneNumber', '=', 'latest.PhoneNumber')
+                    $join->on('messages.phoneNumber', '=', 'latest.phoneNumber')
                         ->on('messages.created_at', '=', 'latest.max_created_at');
                 }
             )
