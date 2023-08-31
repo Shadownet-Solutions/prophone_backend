@@ -31,7 +31,7 @@ class AudienceController extends Controller
                 ], 401);
         }
 
-        $audiences = Audience::where('workspace', $user->workspace)->withCount('contacts')->get();
+        $audiences = Audience::where('workspace', $user->workspace)->withCount('Contacts')->get();
 
         if($audiences->isNotEmpty()){
             return response()->json([
