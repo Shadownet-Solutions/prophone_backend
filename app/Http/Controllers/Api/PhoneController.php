@@ -280,10 +280,11 @@ class PhoneController extends Controller
 
     // get dashboard data 
     public function analytics(){
-        $messages = Message::where('sender', Auth::id())->get()->count();
-        $unique =  Message::where('sender', Auth::id())->where('status', 'Sent')->get()->count();
-        $sent = Message::where('sender', Auth::id())->where('status', 'Sent')->get()->count();
-        $received = Message::where('sender', Auth::id())->where('status', 'Received')->get()->count();
+        $user = Auth::user();
+        $messages = Message::where('from', $user->id)->orWhere('to', $user->id)->get()->count();
+        $unique =  Message::where('from', $user->id)->where('status', 'completed')->orWhere('to', $user->id)->get()->count();
+        $sent = Message::where('from', $user->id)->where('status', 'completed')->orWhere('to', $user->id)->get()->count();
+        $received = Message::where('to', $user->id)->where('status', 'completed')->orWhere('to', $user->id)->get()->count();
         $campaings = Campaign::where('status', 'in-progress')->get();
 
 
