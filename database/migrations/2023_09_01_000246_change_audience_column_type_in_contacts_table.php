@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::table('contacts', function (Blueprint $table) {
             $table->unsignedBigInteger('audience')->change();
+
+            // Add a separate statement to convert the data type
+    DB::statement('ALTER TABLE contacts ALTER COLUMN audience TYPE bigint USING audience::bigint');
         });
     }
 
