@@ -188,7 +188,7 @@ class PhoneController extends Controller
                 'from' => $user->id,
                 'type' => 'outgoing',
                 'to' => $request->to,
-                'workspace' => $workspace->id,
+                // 'workspace' => $user->workspace,
                 'status' => 'completed',
                 ]);
                 return response()->json([
