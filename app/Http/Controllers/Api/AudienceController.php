@@ -33,7 +33,7 @@ class AudienceController extends Controller
 
         $audiences = Audience::where('workspace', $user->workspace)->withCount('contacts')->get();
 
-        if($audiences->isNotEmpty()){
+        if($audiences){
             return response()->json([
                 'status' => 'success',
                 'data' => $audiences
