@@ -73,7 +73,7 @@ class AudienceController extends Controller
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Workspace not found'
+                'message' => 'You do not have a workspace yet'
                 ]);
             }
        
