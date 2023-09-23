@@ -1,0 +1,78 @@
+// response after purchasing number
+{
+    "data": {
+        "phone_numbers": [
+            {
+                "phone_number_type": "local",
+                "requirements_met": true,
+                "country_code": "US",
+                "id": "ba8a488d-7982-4a78-9121-122aca4b33ab",
+                "status": "pending",
+                "regulatory_requirements": [],
+                "phone_number": "+18722778871",
+                "requirements_status": "approved",
+                "bundle_id": null,
+                "record_type": "number_order_phone_number"
+            }
+        ],
+        "billing_group_id": null,
+        "updated_at": "2023-09-23T00:31:24.198244+00:00",
+        "requirements_met": true,
+        "sub_number_orders_ids": [
+            "d3e86f7b-1751-4c68-a970-d9ffc8beadfb"
+        ],
+        "connection_id": null,
+        "id": "f3b35965-6444-46af-a8f3-6082d5fd5e66",
+        "status": "pending",
+        "created_at": "2023-09-23T00:31:24.198242+00:00",
+        "phone_numbers_count": 1,
+        "customer_reference": null,
+        "messaging_profile_id": null,
+        "record_type": "number_order"
+    }
+}
+
+
+
+
+//fetching orders
+{
+    "data": [
+        {
+            "updated_at": "2023-09-23T00:31:24.391931+00:00",
+            "created_at": "2023-09-23T00:31:24.391931+00:00",
+            "sub_number_orders_ids": [
+                "d3e86f7b-1751-4c68-a970-d9ffc8beadfb"
+            ],
+            "status": "success",
+            "connection_id": null,
+            "messaging_profile_id": null,
+            "phone_numbers_count": 1,
+            "phone_numbers": [
+                {
+                    "status": "success",
+                    "phone_number": "+18722778871",
+                    "country_code": "US",
+                    "bundle_id": null,
+                    "regulatory_requirements": [],
+                    "id": "ba8a488d-7982-4a78-9121-122aca4b33ab",
+                    "requirements_status": null,
+                    "requirements_met": true,
+                    "phone_number_type": "local",
+                    "record_type": "number_order_phone_number"
+                }
+            ],
+            "id": "f3b35965-6444-46af-a8f3-6082d5fd5e66",
+            "customer_reference": null,
+            "billing_group_id": null,
+            "requirements_met": true,
+            "record_type": "number_order"
+        }
+    ],
+    "meta": {
+        "total_pages": 1,
+        "total_results": 1,
+        "page_number": 1,
+        "page_size": 25
+    }
+}
