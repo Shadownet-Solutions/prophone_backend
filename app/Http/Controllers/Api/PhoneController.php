@@ -17,6 +17,9 @@ use App\Models\Template;
 use App\Models\Note;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Telnyx\TelnyxClient;
+use Telnyx\AvailablePhoneNumber;
+use Telnyx\MessagingProfile;
 
 
 class PhoneController extends Controller
@@ -26,6 +29,7 @@ class PhoneController extends Controller
 
     public function __construct() {
         $this->middleware('auth:api');
+        \Telnyx\Telnyx::setApiKey(env('TELNYX_API_KEY'));
         
     }
 
@@ -58,6 +62,11 @@ class PhoneController extends Controller
                 'message' => 'You already have a number to get additional number contact your workspace administrator'
                 ], 400);
             }
+
+
+            //provision the first number
+
+            
             $number = Number::create([
                 'created_by' => Auth::id(),
                 'number' => rand(1000000000, 9999999999),
@@ -340,7 +349,40 @@ class PhoneController extends Controller
 
 
     //number search
+public function search_number(Request $request){
+    $user = Auth::user();
+   
 
+    try {
+    $searchParams = [
+        'filter[country_code]' => 'US',
+        'filter[national_destination_code]' => $request->national_destination_code,
+        // 'filter[phone_number][starts_with]' => '359',
+        'filter[locality]' => $request->city,
+        // 'filter[administrative_area]' => 'IL',
+        'filter[number_type]' => $request->type,
+        
+
+
+        'filter[limit]' => 10,
+    ];
+
+    $numbers = AvailablePhoneNumber::all($searchParams);
+
+    return response()->json([
+        'status' => 'success',
+        'numbers' => $numbers
+        ], 200);
+    } catch (\Exception $e) {
+        //handle exceptions
+        return response()->json([
+            'status' => 'error',
+            'message' => 'No number found for the given query, Please adjust and try again'
+            ], 500);
+        }
+
+
+}
 
 
 

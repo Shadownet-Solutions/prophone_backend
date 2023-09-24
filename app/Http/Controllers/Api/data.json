@@ -1,3 +1,122 @@
+//number search
+
+{
+    "data": [
+        {
+            "cost_information": {
+                "upfront_cost": "1.00000",
+                "monthly_cost": "1.00000",
+                "currency": "USD"
+            },
+            "record_type": "available_phone_number",
+            "phone_number": "+18722491402",
+            "best_effort": false,
+            "region_information": [
+                {
+                    "region_name": "US",
+                    "region_type": "country_code"
+                },
+                {
+                    "region_name": "CHICAGO",
+                    "region_type": "location"
+                },
+                {
+                    "region_name": "CHICAGO ZONE 01",
+                    "region_type": "rate_center"
+                },
+                {
+                    "region_name": "IL",
+                    "region_type": "state"
+                }
+            ],
+            "features": [
+                {
+                    "name": "hd_voice"
+                },
+                {
+                    "name": "sms"
+                },
+                {
+                    "name": "mms"
+                },
+                {
+                    "name": "voice"
+                },
+                {
+                    "name": "fax"
+                },
+                {
+                    "name": "emergency"
+                }
+            ],
+            "quickship": false,
+            "reservable": true,
+            "vanity_format": null,
+            "phone_number_type": "local"
+        },
+        {
+            "cost_information": {
+                "upfront_cost": "1.00000",
+                "monthly_cost": "1.00000",
+                "currency": "USD"
+            },
+            "record_type": "available_phone_number",
+            "phone_number": "+18722778871",
+            "best_effort": false,
+            "region_information": [
+                {
+                    "region_name": "US",
+                    "region_type": "country_code"
+                },
+                {
+                    "region_name": "CHICAGO",
+                    "region_type": "location"
+                },
+                {
+                    "region_name": "CHICAGO ZONE 05",
+                    "region_type": "rate_center"
+                },
+                {
+                    "region_name": "IL",
+                    "region_type": "state"
+                }
+            ],
+            "features": [
+                {
+                    "name": "hd_voice"
+                },
+                {
+                    "name": "sms"
+                },
+                {
+                    "name": "mms"
+                },
+                {
+                    "name": "voice"
+                },
+                {
+                    "name": "fax"
+                },
+                {
+                    "name": "emergency"
+                }
+            ],
+            "quickship": false,
+            "reservable": true,
+            "vanity_format": null,
+            "phone_number_type": "local"
+        }
+    ],
+    "meta": {
+        "total_results": 2,
+        "best_effort_results": 0
+    },
+    "metadata": {
+        "total_results": 2,
+        "best_effort_results": 0
+    }
+}
+
 // response after purchasing number
 {
     "data": {
@@ -76,3 +195,117 @@
         "page_size": 25
     }
 }
+
+
+//successful sms
+{
+    "data": {
+        "record_type": "message",
+        "direction": "outbound",
+        "id": "40318ac2-2401-4286-9988-d859c44716ca",
+        "type": "SMS",
+        "organization_id": "600d8025-13f4-4e4b-ac9b-d6dd2d3c5787",
+        "messaging_profile_id": "40018aad-1c2d-4996-928a-e9502310e15d",
+        "from": {
+            "phone_number": "+18722778871",
+            "carrier": "Telnyx",
+            "line_type": "Wireless"
+        },
+        "to": [
+            {
+                "phone_number": "+19062845547",
+                "status": "queued",
+                "carrier": "TWILIO INTERNATIONAL, INC.",
+                "line_type": "Pre-Paid Wireless"
+            }
+        ],
+        "cc": [],
+        "text": "Hello, This is a test message from ProPhone",
+        "media": [],
+        "webhook_url": "https://demo.fastinbox.co.uk/api/inbound/telnyx",
+        "webhook_failover_url": "",
+        "encoding": "GSM-7",
+        "parts": 1,
+        "tags": [],
+        "cost": {
+            "amount": "0.0040",
+            "currency": "USD"
+        },
+        "received_at": "2023-09-23T13:04:14.126+00:00",
+        "sent_at": null,
+        "completed_at": null,
+        "valid_until": "2023-09-23T14:04:14.126+00:00",
+        "errors": []
+    }
+}
+
+{
+    "applicationKey": "aa2d356b-e2f0-45e8-9725-e0efc7b5d29c",
+    "duration": 5892,
+    "media": "WLaQdj84Lk",
+    "user": "66984203",
+    "viewId": "6eb8a7ea-87fc-4dcf-9382-a61c7b4b9a74",
+    "playerVersion": "5.17.5",
+    "transmissionType": "vod",
+    "mediaType": "video",
+    "isMediaPublic": false,
+    "endTime": 200,
+    "startTime": 191
+  }
+
+  {
+    "applicationKey": "aa2d356b-e2f0-45e8-9725-e0efc7b5d29c",
+    "duration": 5892,
+    "media": "WLaQdj84Lk",
+    "user": "66984203",
+    "viewId": "6eb8a7ea-87fc-4dcf-9382-a61c7b4b9a74",
+    "playerVersion": "5.17.5",
+    "transmissionType": "vod",
+    "mediaType": "video",
+    "isMediaPublic": false,
+    "endTime": 240,
+    "startTime": 231
+  }
+
+  {
+    "applicationKey": "aa2d356b-e2f0-45e8-9725-e0efc7b5d29c",
+    "duration": 5892,
+    "media": "WLaQdj84Lk",
+    "user": "66984203",
+    "viewId": "6eb8a7ea-87fc-4dcf-9382-a61c7b4b9a74",
+    "playerVersion": "5.17.5",
+    "transmissionType": "vod",
+    "mediaType": "video",
+    "isMediaPublic": false,
+    "endTime": 250,
+    "startTime": 241
+  }
+
+  {
+    "applicationKey": "aa2d356b-e2f0-45e8-9725-e0efc7b5d29c",
+    "duration": 5892,
+    "media": "WLaQdj84Lk",
+    "user": "66984203",
+    "viewId": "6eb8a7ea-87fc-4dcf-9382-a61c7b4b9a74",
+    "playerVersion": "5.17.5",
+    "transmissionType": "vod",
+    "mediaType": "video",
+    "isMediaPublic": false,
+    "time": 295
+  }
+  
+  {
+    "applicationKey": "aa2d356b-e2f0-45e8-9725-e0efc7b5d29c",
+    "duration": 5892,
+    "media": "WLaQdj84Lk",
+    "user": "66984203",
+    "viewId": "6eb8a7ea-87fc-4dcf-9382-a61c7b4b9a74",
+    "playerVersion": "5.17.5",
+    "transmissionType": "vod",
+    "mediaType": "video",
+    "isMediaPublic": false,
+    "endTime": 295,
+    "startTime": 291
+  }
+
+  

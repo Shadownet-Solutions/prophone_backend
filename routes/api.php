@@ -101,3 +101,6 @@ Route::delete('/deleteTemplateMessage/{template_message_id}', [WorkspaceControll
 
 //modify template message
 Route::patch('/modifyTemplateMessage', [WorkspaceController::class, 'modifyTemplateMessage']);
+
+//number search
+Route::post('/phone_number', [PhoneController::class, 'search_number']);
