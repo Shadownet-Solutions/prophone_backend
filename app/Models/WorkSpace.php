@@ -12,6 +12,7 @@ class WorkSpace extends Model
     protected $fillable = [
         'title',
         'description',
-        'image'
+        'image',
+        'messaging_profile_id'
     ];
 }

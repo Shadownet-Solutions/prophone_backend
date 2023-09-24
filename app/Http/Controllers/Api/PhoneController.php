@@ -65,8 +65,13 @@ class PhoneController extends Controller
 
 
             //provision the first number
+            $purchaseParams = [
+                'phone_number' => $request->number, 
+                'messaging_profile_id' => $workspace->messaging_profile_id, 
+            ];
 
-            
+            $purchasedNumber = AvailablePhoneNumber::purchase($purchaseParams);
+
             $number = Number::create([
                 'created_by' => Auth::id(),
                 'number' => rand(1000000000, 9999999999),
