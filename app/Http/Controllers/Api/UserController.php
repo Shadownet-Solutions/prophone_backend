@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\WorkSpace;
 
 class UserController extends Controller
 {
@@ -20,9 +21,13 @@ class UserController extends Controller
 
         $user = Auth::user();
         if ($user) {
+            $workspace = WorkSpace::where('id', $user->workspace)->first();
+            $balance = number_format($workspace->wallet, 2);
+
         return response()->json([
             'status' => 'success',
-            'user' => $user
+            'user' => $user,
+            'balance' => $balance
             ]);
         } else {
             return response()->json([
