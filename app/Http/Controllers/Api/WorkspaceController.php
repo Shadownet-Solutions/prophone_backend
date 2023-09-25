@@ -29,6 +29,7 @@ class WorkspaceController extends Controller
             'except' => [
                 'webhook'
                 ]
+            
         ]);
          \Telnyx\Telnyx::setApiKey(env('TELNYX_API_KEY'));
      }
@@ -274,9 +275,20 @@ class WorkspaceController extends Controller
             'created_by' => $user->id,
             'workspace' => $user->workspace,
             ]);
+
+            //get messages array and create for each message
+            $messages = $request->messages;
+            foreach($messages as $message){
+                TemplateMessage::create([
+                    'template_id' => $template->id,
+                    'body' => $message,
+                    'created_by' => $user->id,
+                    ]);
+                    }
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Template created',
+                'message' => 'Template created Successfuly',
                 'template' => $template
                 ], 200);
             }
