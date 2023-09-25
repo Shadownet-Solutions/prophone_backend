@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('image')->nullable();
             $table->string('status')->nullable();
+            $table->string('wallet')->nullable();
             $table->string('messaging_profile_id')->nullable();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

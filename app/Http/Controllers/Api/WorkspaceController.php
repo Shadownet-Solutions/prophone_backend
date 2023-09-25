@@ -17,7 +17,7 @@ use Str;
 use App\Models\Invitation;
 use App\Mail\InviteExistingUser;
 use App\Mail\InviteNewUser;
-
+use Telnyx\MessagingProfile;
 
 class WorkspaceController extends Controller
 {
@@ -25,7 +25,12 @@ class WorkspaceController extends Controller
         //protect functions
      
         public function __construct() {
-         $this->middleware('auth:api');
+         $this->middleware('auth:api',[
+            'except' => [
+                'webhook'
+                ]
+        ]);
+         \Telnyx\Telnyx::setApiKey(env('TELNYX_API_KEY'));
      }
      
      //get team members
@@ -63,24 +68,62 @@ class WorkspaceController extends Controller
                  'message' => 'You already have a workspace'
                  ], 400);
                  }
-         $workspace = new WorkSpace;
-         $workspace->title = $request->title;
-         $workspace->description = $request->description;
-         $workspace->image = $request->image;
-         $workspace->status = 'active';
-         $workspace->created_by = $user->id;
-         $workspace->save();
+            $name = $request->title;
 
-         // add the workspace to the user
-         $user->workspace = $workspace->id;
-         $user->save();
+                
+            // $profile = MessagingProfile::Retrieve("40018aca-3953-4ca1-9496-b93ae627b38b");
+            // $profile->delete();
 
-        //return response
-         return response()->json([
-             'status' => 'success',
-             'message' => 'Workspace created successfully'
-             ], 200);
+            // return $profile;
+
+            try{
+
+                $createProfile = MessagingProfile::Create(
+                    [
+                        
+                        "name" => $name,
+                        
+                        "webhook_url" => "https://app.prophone.io/api/webhook"
+                    ]);
+
+                // return $createProfile;
+
+
+       
+
+                $workspace = new WorkSpace;
+                $workspace->title = $name;
+                $workspace->messaging_profile_id = $createProfile->id;
+                $workspace->wallet = 0;
+                $workspace->description = $request->description;
+                $workspace->image = $request->image;
+                $workspace->status = 'active';
+                $workspace->wallet = 0;
+                $workspace->created_by = $user->id;
+                $workspace->save();
+
+                // add the workspace to the user
+                $user->workspace = $workspace->id;
+                $user->save();
+
+                //return response
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Workspace created successfully'
+                    ], 200);
+
+
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+                ], 400);
+        
             }
+
+      }
+
 
     // invite members to workspace
     public function invite(Request $request) {
@@ -169,7 +212,24 @@ class WorkspaceController extends Controller
             ], 200);
         }
 
-     
+    //get workspace wallet balance
+
+    public function balance(){
+        $user = Auth::user();
+        $workspace = WorkSpace::find($user->workspace);
+        if($workspace){
+            return response()->json([
+                'status' => 'success',
+                'balance' => number_format($workspace->wallet, 2)
+                ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No workspace found'
+                ], 400);
+            }
+     }
+    
      
      
     //get templates using workspace id

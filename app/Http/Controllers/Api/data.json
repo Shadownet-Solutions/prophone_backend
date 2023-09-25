@@ -117,7 +117,8 @@
     }
 }
 
-// response after purchasing number
+
+//response after purchasing number
 {
     "data": {
         "phone_numbers": [
@@ -151,7 +152,37 @@
     }
 }
 
-
+//real response after purchase
+{
+    "id": "d4afa292-a9b5-4449-921b-9ec390786eef",
+    "phone_numbers": [
+        {
+            "id": "0646af86-69c3-4aeb-b31a-431640dd8b01",
+            "phone_number_type": "local",
+            "requirements_met": true,
+            "country_code": "US",
+            "status": "pending",
+            "regulatory_requirements": [],
+            "phone_number": "+13528291358",
+            "requirements_status": "approved",
+            "bundle_id": null,
+            "record_type": "number_order_phone_number"
+        }
+    ],
+    "billing_group_id": null,
+    "updated_at": "2023-09-24T22:14:01.725529+00:00",
+    "requirements_met": true,
+    "sub_number_orders_ids": [
+        "920059d5-ea2e-4ba1-87e1-a2fba3b66c33"
+    ],
+    "connection_id": null,
+    "status": "pending",
+    "created_at": "2023-09-24T22:14:01.725528+00:00",
+    "phone_numbers_count": 1,
+    "customer_reference": null,
+    "messaging_profile_id": "40018aad-1c2d-4996-928a-e9502310e15d",
+    "record_type": "number_order"
+}
 
 
 //fetching orders
@@ -199,45 +230,76 @@
 
 //successful sms
 {
-    "data": {
-        "record_type": "message",
-        "direction": "outbound",
-        "id": "40318ac2-2401-4286-9988-d859c44716ca",
-        "type": "SMS",
-        "organization_id": "600d8025-13f4-4e4b-ac9b-d6dd2d3c5787",
-        "messaging_profile_id": "40018aad-1c2d-4996-928a-e9502310e15d",
-        "from": {
-            "phone_number": "+18722778871",
-            "carrier": "Telnyx",
-            "line_type": "Wireless"
-        },
-        "to": [
-            {
-                "phone_number": "+19062845547",
-                "status": "queued",
-                "carrier": "TWILIO INTERNATIONAL, INC.",
-                "line_type": "Pre-Paid Wireless"
-            }
-        ],
-        "cc": [],
-        "text": "Hello, This is a test message from ProPhone",
-        "media": [],
-        "webhook_url": "https://demo.fastinbox.co.uk/api/inbound/telnyx",
-        "webhook_failover_url": "",
-        "encoding": "GSM-7",
-        "parts": 1,
-        "tags": [],
-        "cost": {
-            "amount": "0.0040",
-            "currency": "USD"
-        },
-        "received_at": "2023-09-23T13:04:14.126+00:00",
-        "sent_at": null,
-        "completed_at": null,
-        "valid_until": "2023-09-23T14:04:14.126+00:00",
-        "errors": []
-    }
+    "id": "40318ac9-8a60-47dc-828a-2a54577be550",
+    "record_type": "message",
+    "direction": "outbound",
+    "type": "SMS",
+    "organization_id": "600d8025-13f4-4e4b-ac9b-d6dd2d3c5787",
+    "messaging_profile_id": "40018aad-1c2d-4996-928a-e9502310e15d",
+    "from": {
+        "phone_number": "+13528291357",
+        "carrier": "Telnyx",
+        "line_type": "Wireless"
+    },
+    "to": [
+        {
+            "phone_number": "+19062845547",
+            "status": "queued",
+            "carrier": "TWILIO INTERNATIONAL, INC.",
+            "line_type": "Pre-Paid Wireless"
+        }
+    ],
+    "cc": [],
+    "text": "This is another test message to a customer from prohone",
+    "media": [],
+    "webhook_url": "https://demo.fastinbox.co.uk/api/inbound/telnyx",
+    "webhook_failover_url": "",
+    "encoding": "GSM-7",
+    "parts": 1,
+    "tags": [],
+    "cost": {
+        "amount": "0.0040",
+        "currency": "USD"
+    },
+    "received_at": "2023-09-24T23:33:23.719+00:00",
+    "sent_at": null,
+    "completed_at": null,
+    "valid_until": "2023-09-25T00:33:23.719+00:00",
+    "errors": []
 }
+
+//after creating workspace
+
+{
+    "id": "40018aca-31ca-4fda-abe9-1eda02b8fe0f",
+    "record_type": "messaging_profile",
+    "organization_id": "600d8025-13f4-4e4b-ac9b-d6dd2d3c5787",
+    "name": "Alpha-Core Labs",
+    "webhook_url": "https://www.app.prophone.io/api/webhook",
+    "webhook_failover_url": null,
+    "enabled": true,
+    "whitelisted_destinations": [
+        "*"
+    ],
+    "webhook_api_version": "2",
+    "created_at": "2023-09-25T02:36:15.474Z",
+    "updated_at": "2023-09-25T02:36:15.474Z",
+    "number_pool_settings": null,
+    "url_shortener_settings": null,
+    "v1_secret": "pNMPwL2tQHzDMww187OYA6la",
+    "health_webhook_url": null,
+    "mms_fall_back_to_sms": false
+}
+
+
+
+
+
+
+
+
+
+
 
 {
     "applicationKey": "aa2d356b-e2f0-45e8-9725-e0efc7b5d29c",

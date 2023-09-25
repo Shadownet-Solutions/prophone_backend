@@ -13,6 +13,7 @@ class WorkSpace extends Model
         'title',
         'description',
         'image',
-        'messaging_profile_id'
+        'messaging_profile_id',
+        'wallet'
     ];
 }

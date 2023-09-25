@@ -40,7 +40,7 @@ Route::get('/numbers', [PhoneController::class, 'numbers']);
 Route::get('/inbox/{number_id}', [PhoneController::class, 'inbox']);
 
 //get number created by the user
-Route::get('/user_numbers', [PhoneController::class, 'user_numbers']);
+Route::get('/user_numbers', [PhoneController::class, 'numbers']);
 //send message
 Route::post('/send', [PhoneController::class, 'send']);
 //get a sigle message conversation
@@ -104,3 +104,12 @@ Route::patch('/modifyTemplateMessage', [WorkspaceController::class, 'modifyTempl
 
 //number search
 Route::post('/phone_number', [PhoneController::class, 'search_number']);
+
+//get server time
+Route::get('/tester', [PhoneController::class, 'tester']);
+
+//get workspace balance
+Route::get('/balance', [WorkspaceController::class, 'balance']);
+
+//prophone webhook
+Route::post('/webhook', [PhoneController::class, 'webhook']);

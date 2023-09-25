@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\DB;
 use Telnyx\TelnyxClient;
 use Telnyx\AvailablePhoneNumber;
 use Telnyx\MessagingProfile;
+use Telnyx\NumberOrder;
+use Telnyx\Message as TelMessage;
 
 
 class PhoneController extends Controller
@@ -51,44 +53,150 @@ class PhoneController extends Controller
                 'message' => 'You do not have a workspace, Please create one or be added to one'
                 ], 400);
                 }
+           // get workspace     
         $workspace = WorkSpace::where('id', $user->workspace)->first();
 
         $current_number = Number::where('workspace', $workspace->id)->first();
 
-       // already have a number and proccess new number at $5
-        if($current_number){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'You already have a number to get additional number contact your workspace administrator'
-                ], 400);
+       //if the workspace has no previous number
+        if(!$current_number){
+
+            //provision number for the workspace for free
+
+            try {
+                    //provision th secon number first number
+                    $purchaseParams = [
+                        'phone_number' => $request->number, 
+                        'messaging_profile_id' => $workspace->messaging_profile_id, 
+                    ];
+                
+                    $purchasedNumber = NumberOrder::Create(["phone_numbers" => [["phone_number" => $purchaseParams['phone_number']]], "messaging_profile_id" => $purchaseParams['messaging_profile_id']]);
+                    
+                    // Extract relevant data from the response
+                    
+                    $phoneNumberData = $purchasedNumber['phone_numbers'][0];
+
+                
+                    $phoneNumberType = $phoneNumberData['phone_number_type'];
+                    $numberId = $phoneNumberData['id'];;
+                    $orderStatus = $phoneNumberData['status'];
+                    $order_id = $purchasedNumber->id;
+
+                    // Create a record for the purchased number in the database
+                    $number = Number::create([
+                        'created_by' => $user->id,
+                        'number' => $request->number,
+                        'number_id' => $numberId,
+                        'label' => $request->label,
+                        'type' => $phoneNumberType, 
+                        'order_id' => $order_id,
+                        'messaging_profile_id' => $purchasedNumber->messaging_profile_id,
+                        'description' => 'Personal number',
+                        'workspace' => $workspace->id,
+                        'status' => $orderStatus,
+
+                        ]);
+
+
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'Number Provisioned and $5 was deducted from your balance',
+                            'number' =>  $number->number
+                            ], 200);
+
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                        ], 400);
+
+                    }
+
             }
 
 
-            //provision the first number
+
+            //at this point the workspace already have a number or more, proccess new number at $5
+
+            //get wallet and wallet balance
+            $wallet = $workspace->wallet;
+
+
+            //if wallet balance is too low then return
+            if($wallet < 5){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Your wallet balance is too low, Please add more funds and try again'
+                    ], 400);
+                    }
+
+
+
+        try {
+            //provision th secon number first number
             $purchaseParams = [
                 'phone_number' => $request->number, 
                 'messaging_profile_id' => $workspace->messaging_profile_id, 
             ];
+           
+            $purchasedNumber = NumberOrder::Create(["phone_numbers" => [["phone_number" => $purchaseParams['phone_number']]], "messaging_profile_id" => $purchaseParams['messaging_profile_id']]);
+            
+            // Extract relevant data from the response
+            
+            $phoneNumberData = $purchasedNumber['phone_numbers'][0];
 
-            $purchasedNumber = AvailablePhoneNumber::purchase($purchaseParams);
+         
+            $phoneNumberType = $phoneNumberData['phone_number_type'];
+            $numberId = $phoneNumberData['id'];;
+            $orderStatus = $phoneNumberData['status'];
+            $order_id = $purchasedNumber->id;
 
+            // Create a record for the purchased number in the database
             $number = Number::create([
-                'created_by' => Auth::id(),
-                'number' => rand(1000000000, 9999999999),
+                'created_by' => $user->id,
+                'number' => $request->number,
+                'number_id' => $numberId,
                 'label' => $request->label,
-                'type' => 'Toll Free',
+                'type' => $phoneNumberType, 
+                'order_id' => $order_id,
+                'messaging_profile_id' => $purchasedNumber->messaging_profile_id,
                 'description' => 'Personal number',
                 'workspace' => $workspace->id,
-                // 'company_name' => $request->company_name,
-                'status' => 'Active',
+                'status' => $orderStatus,
 
                 ]);
+
+            // deduct $5 from their balance
+            $wallet = $wallet - 5;
+            $workspace->wallet = $wallet;
+            $workspace->save();
+
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Number Provisioned',
+                    'message' => 'Number Provisioned and $5 was deducted from your balance',
                     'number' =>  $number->number
                     ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+                ], 400);
+
+            }
                 
+
+    }
+
+    public function tester(){
+        //get current time and convert to readable time
+        $current_time = date("Y-m-d H:i:s");
+
+            return response()->json([
+                'status' => 'success',
+                'message' => $current_time
+
+            ]);
 
     }
 
@@ -192,24 +300,48 @@ class PhoneController extends Controller
                 ], 401);
                 }
         
+            //check if the number exists
         $number = Number::find($request->number);
 
         if($number){
-            $message = Message::create([
-                'number' => $request->number,
-                'phoneNumber' => $request->to,
-                'content' => $request->message,
-                'from' => $user->id,
-                'type' => 'outgoing',
-                'to' => $request->to,
-                // 'workspace' => $user->workspace,
-                'status' => 'completed',
-                ]);
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Message Sent'
-                    ], 200);
-                }
+            try {
+
+                    $to = $request->to;
+                    $text = $request->message;
+                    $from = $number->number;
+
+                
+                    $send = TelMessage::Create([
+                        "from" => $from,
+                        "to" => $to, 
+                        "text" => $text
+                    ]);
+
+                    //  return $send->type;
+
+                    $message = Message::create([
+                        'number' => $request->number,
+                        'phoneNumber' => $to,
+                        'content' => $text,
+                        'from' => $from,
+                        'type' => $send->type,
+                        'to' => $to,
+                        // 'workspace' => $user->workspace,
+                        'status' => 'completed',
+                        ]);
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'Message Sent Successfully!'
+                            ], 200);
+
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                        ], 400);
+                
+                    }
+            }
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Sender Number not found'
