@@ -46,6 +46,11 @@ class PhoneController extends Controller
                 'message' => 'session not active'
                 ], 401);
         }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'mock number purchased'
+            ], 200);
         //check if the user has a workspace if not return error
         if(!$user->workspace){
             return response()->json([
@@ -58,11 +63,6 @@ class PhoneController extends Controller
 
         $current_number = Number::where('workspace', $workspace->id)->first();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'mock number successful'
-            ], 200);
-            }
        //if the workspace has no previous number
         if(!$current_number){
 
@@ -122,7 +122,7 @@ class PhoneController extends Controller
 
 
             //at this point the workspace already have a number or more, proccess new number at $5
-            // this is where the debit will happen as soon as stripe is in place 
+
             //get wallet and wallet balance
             // $wallet = $workspace->wallet;
 
