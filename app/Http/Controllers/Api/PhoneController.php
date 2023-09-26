@@ -117,18 +117,18 @@ class PhoneController extends Controller
 
 
             //at this point the workspace already have a number or more, proccess new number at $5
-
+            // this is where the debit will happen as soon as stripe is in place 
             //get wallet and wallet balance
-            $wallet = $workspace->wallet;
+            // $wallet = $workspace->wallet;
 
 
             //if wallet balance is too low then return
-            if($wallet < 5){
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Your wallet balance is too low, Please add more funds and try again'
-                    ], 400);
-                    }
+            // if($wallet < 5){
+            //     return response()->json([
+            //         'status' => 'error',
+            //         'message' => 'Your wallet balance is too low, Please add more funds and try again'
+            //         ], 400);
+            //         }
 
 
 
