@@ -36,7 +36,7 @@ class PhoneController extends Controller
     }
 
 
-//provision number
+    //provision number
     public function provision(Request $request){
             $user = Auth::user();
             
@@ -350,14 +350,16 @@ class PhoneController extends Controller
     }
 
 
-//get a single conversation
+    //get a single conversation
 
-    public function conversation(Request $request){
+    public function conversation($number, $phoneNumber){
         $user = Auth::user();
-        $number = Number::find($request->number);
+        // $number = Number::find($number);
         
-        if($number){
-            $messages = Message::where('number', $request->number)->where('phoneNumber', $request->phoneNumber)->get();
+        
+            $messages = Message::where('number', $number)->where('phoneNumber', $phoneNumber)->get();
+            if($messages){
+            
             return response()->json([
                 'status' => 'success',
                 'messages' => $messages

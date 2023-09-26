@@ -44,7 +44,7 @@ Route::get('/user_numbers', [PhoneController::class, 'numbers']);
 //send message
 Route::post('/send', [PhoneController::class, 'send']);
 //get a sigle message conversation
-Route::post('/conversation', [PhoneController::class, 'conversation']);
+Route::get('/conversation/{number_id}/{phoneNumber}', [PhoneController::class, 'conversation']);
 //get details of a contact
 Route::get('/contact/{phone}', [PhoneController::class, 'contact']);
 //get dashboard data
