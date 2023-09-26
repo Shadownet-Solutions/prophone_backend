@@ -167,9 +167,9 @@ class PhoneController extends Controller
                 ]);
 
             // deduct $5 from their balance
-            $wallet = $wallet - 5;
-            $workspace->wallet = $wallet;
-            $workspace->save();
+            // $wallet = $wallet - 5;
+            // $workspace->wallet = $wallet;
+            // $workspace->save();
 
                 return response()->json([
                     'status' => 'success',
