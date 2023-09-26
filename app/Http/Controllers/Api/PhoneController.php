@@ -58,6 +58,11 @@ class PhoneController extends Controller
 
         $current_number = Number::where('workspace', $workspace->id)->first();
 
+        return response()->json([
+            'status' => 'success',
+            'message' => 'mock number successful'
+            ], 200);
+            }
        //if the workspace has no previous number
         if(!$current_number){
 
