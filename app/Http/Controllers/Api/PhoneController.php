@@ -47,6 +47,21 @@ class PhoneController extends Controller
                 ], 401);
         }
 
+
+        $number = Number::create([
+            'created_by' => $user->id,
+            'number' => '5458754',
+            'number_id' => '125',
+            'label' => $request->label,
+            'type' => 'local', 
+            'order_id' => '46545',
+            'messaging_profile_id' => 'surgfuewi',
+            'description' => 'Personal number',
+            'workspace' => '1',
+            'status' => 'going',
+
+            ]);
+
         return response()->json([
             'status' => 'success',
             'message' => 'mock number purchased'
