@@ -38,6 +38,42 @@ class CampaignController extends Controller
                     ]);
                 }
         }
+
+
+    //create campaign
+    public function create(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'number' => 'required',
+            'template' => 'required',
+            'audience' => 'required'
+            ]);
+            if($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                    ]);
+                }
+            //create campaign
+            $campaign = new Campaign;
+            $campaign->title = $request->name;
+            $campaign->number = $request->number;
+            $campaign->template = $request->template;
+            $campaign->audience = $request->audience;
+            $campaign->status = 'submitted',
+            $campaign->rate_control = $request->rate_control;
+            //schedule is an array
+
+            // $campaign->schedule = $request->schedule;
+            $campaign->start_time = $request->start_time;
+            $campaign->save();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Campaign Created Successfully'
+                ]);
+
+
+     }
         
     
 }

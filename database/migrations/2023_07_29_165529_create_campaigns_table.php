@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('number')->nullable();
             $table->string('workspace')->nullable();
+            $table->string('template')->nullable();
+            $table->string('schedule')->nullable();
             $table->string('status')->nullable();
             $table->string('start_time')->nullable();
             $table->string('audience')->nullable();

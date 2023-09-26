@@ -113,3 +113,6 @@ Route::get('/balance', [WorkspaceController::class, 'balance']);
 
 //prophone webhook
 Route::post('/webhook', [PhoneController::class, 'webhook']);
+
+//create campaign
+Route::post('/create-campaign', [CampaignController::class, 'create']);

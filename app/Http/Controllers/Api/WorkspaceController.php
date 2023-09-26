@@ -278,10 +278,17 @@ class WorkspaceController extends Controller
 
             //get messages array and create for each message
             $messages = $request->messages;
+            $backup = TemplateMessage::create([
+                'template_id' => $template->id,
+                    'body' => $request->backupText,
+                    'type' => 'backup',
+                    'created_by' => $user->id,
+            ]);
             foreach($messages as $message){
                 TemplateMessage::create([
                     'template_id' => $template->id,
                     'body' => $message,
+                    'type' => 'message',
                     'created_by' => $user->id,
                     ]);
                     }

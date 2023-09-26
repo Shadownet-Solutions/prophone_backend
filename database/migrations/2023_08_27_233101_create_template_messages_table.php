@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('body');
             $table->foreignId('template_id')->constrained('templates');
+            $table->string('type')->nullable();
             $table->string('created_by')->nullable();
             $table->timestamps();
         });

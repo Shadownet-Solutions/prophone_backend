@@ -12,6 +12,7 @@ class TemplateMessage extends Model
     protected $fillable = [
         'body',
         'template_id',
-        'created_by'
+        'created_by',
+        'type'
     ];
 }
