@@ -47,7 +47,7 @@ class PhoneController extends Controller
                     ], 401);
                 }
                 
-                $numer = $request->number;
+                $number = $request->number;
                 if ($number){
                     return response()->json([
                         'status' => 'success',
