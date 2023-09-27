@@ -45,7 +45,20 @@ class PhoneController extends Controller
                     'status' => 'error',
                     'message' => 'session not active'
                     ], 401);
-                }   
+                }
+                
+                $numer = $request->number;
+                if ($number){
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'mock success'
+                        ], 200);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'no number filed'
+                        ], 400);
+                }
             
             //check if the user has a workspace if not return error
             if(!$user->workspace){
@@ -325,7 +338,7 @@ class PhoneController extends Controller
                         'phoneNumber' => $to,
                         'content' => $text,
                         'from' => $from,
-                        'type' => 'outgoing',
+                        'type' => 'outgoingƒ',
                         'to' => $to,
                         // 'workspace' => $user->workspace,
                         'status' => 'completed',
