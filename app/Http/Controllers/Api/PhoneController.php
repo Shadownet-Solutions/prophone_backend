@@ -309,11 +309,12 @@ class PhoneController extends Controller
         if($number){
             try {
 
-                    $to = $request->to;
+
+                    $to = "+1".$request->to;
                     $text = $request->message;
                     $from = $number->number;
 
-                
+                    
                     $send = TelMessage::Create([
                         "from" => $from,
                         "to" => $to, 
