@@ -328,7 +328,7 @@ class PhoneController extends Controller
                         'phoneNumber' => $to,
                         'content' => $text,
                         'from' => $from,
-                        'type' => 'outgoingƒ',
+                        'type' => 'outgoing',
                         'to' => $to,
                         // 'workspace' => $user->workspace,
                         'status' => 'completed',
