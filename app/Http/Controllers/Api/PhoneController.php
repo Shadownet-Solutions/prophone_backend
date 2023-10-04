@@ -70,7 +70,7 @@ class PhoneController extends Controller
                         //provision th secon number first number
                         $purchaseParams = [
                             'phone_number' => $request->number, 
-                            'messaging_profile_id' => $workspace->messaging_profile_id, 
+                            'messaging_profile_id' => $workspace->messaging_profile_id,
                         ];
                     
                         $purchasedNumber = NumberOrder::Create(["phone_numbers" => [["phone_number" => $purchaseParams['phone_number']]], "messaging_profile_id" => $purchaseParams['messaging_profile_id']]);
@@ -81,14 +81,15 @@ class PhoneController extends Controller
 
                     
                         $phoneNumberType = $phoneNumberData['phone_number_type'];
-                        $numberId = $phoneNumberData['id'];;
+                        $numberId = $phoneNumberData['id'];
                         $orderStatus = $phoneNumberData['status'];
                         $order_id = $purchasedNumber->id;
+                        $number = substr($request->number, 2);
 
                         // Create a record for the purchased number in the database
                         $number = Number::create([
                             'created_by' => $user->id,
-                            'number' => $request->number,
+                            'number' => $number,
                             'number_id' => $numberId,
                             'label' => $request->label,
                             'type' => $phoneNumberType, 
@@ -121,17 +122,17 @@ class PhoneController extends Controller
 
                 //at this point the workspace already have a number or more, proccess new number at $5
 
-                //get wallet and wallet balance
-                // $wallet = $workspace->wallet;
+                // get wallet and wallet balance
+                $wallet = $workspace->wallet;
 
 
-                //if wallet balance is too low then return
-                // if($wallet < 5){
-                //     return response()->json([
-                //         'status' => 'error',
-                //         'message' => 'Your wallet balance is too low, Please add more funds and try again'
-                //         ], 400);
-                //     }
+                // if wallet balance is too low then return
+                if($wallet < 5){
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Your wallet balance is too low, Please add more funds and try again'
+                        ], 400);
+                    }
 
 
 
@@ -153,11 +154,12 @@ class PhoneController extends Controller
                 $numberId = $phoneNumberData['id'];;
                 $orderStatus = $phoneNumberData['status'];
                 $order_id = $purchasedNumber->id;
+                $number = substr($request->number, 2);
 
                 // Create a record for the purchased number in the database
                 $number = Number::create([
                     'created_by' => $user->id,
-                    'number' => $request->number,
+                    'number' => $number,
                     'number_id' => $numberId,
                     'label' => $request->label,
                     'type' => $phoneNumberType, 
@@ -169,10 +171,10 @@ class PhoneController extends Controller
 
                     ]);
 
-                // deduct $5 from their balance
-                // $wallet = $wallet - 5;
-                // $workspace->wallet = $wallet;
-                // $workspace->save();
+                    // deduct $5 from their balance
+                    $wallet = $wallet - 5;
+                    $workspace->wallet = $wallet;
+                    $workspace->save();
 
                     return response()->json([
                         'status' => 'success',
@@ -252,9 +254,10 @@ class PhoneController extends Controller
         $number = Number::find($number_id);
         if($number){
             // get one message per phoneNumber and order by latest
-
+           
             $latestMessages = Message::select('messages.*')
-            ->where('number', $number_id)
+            ->where('to', $number->number)
+            ->orWhere('from', $number->number)
             ->joinSub(
                 Message::select('phoneNumber', DB::raw('MAX(created_at) as max_created_at'))
                     ->groupBy('phoneNumber'),
@@ -312,7 +315,7 @@ class PhoneController extends Controller
 
                     $to = "+1".$request->to;
                     $text = $request->message;
-                    $from = $number->number;
+                    $from = "+1".$number->number;
 
                     
                     $send = TelMessage::Create([
@@ -324,12 +327,12 @@ class PhoneController extends Controller
                     //  return $send->type;
 
                     $message = Message::create([
-                        'number' => $request->number,
-                        'phoneNumber' => $to,
+                        'number' => $number->number,
+                        'phoneNumber' => $request->to,
                         'content' => $text,
-                        'from' => $from,
+                        'from' => $number->number,
                         'type' => 'outgoing',
-                        'to' => $to,
+                        'to' => $request->to,
                         // 'workspace' => $user->workspace,
                         'status' => 'completed',
                         ]);
