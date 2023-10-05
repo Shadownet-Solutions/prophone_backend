@@ -256,17 +256,17 @@ class PhoneController extends Controller
             // get one message per phoneNumber and order by latest
            
             $latestMessages = Message::select('messages.*')
-            ->where('to', $number->number)
-            ->orWhere('from', $number->number)
-            ->joinSub(
-                Message::select('phoneNumber', DB::raw('MAX(created_at) as max_created_at'))
-                    ->groupBy('phoneNumber'),
-                'latest',
-                function ($join) {
-                    $join->on('messages.phoneNumber', '=', 'latest.phoneNumber')
-                        ->on('messages.created_at', '=', 'latest.max_created_at');
-                }
-            )
+            ->where('number', $number->number)
+            // ->orWhere('from', $number->number)
+            // ->joinSub(
+            //     Message::select('phoneNumber', DB::raw('MAX(created_at) as max_created_at'))
+            //         ->groupBy('phoneNumber'),
+            //     'latest',
+            //     function ($join) {
+            //         $join->on('messages.phoneNumber', '=', 'latest.phoneNumber')
+            //             ->on('messages.created_at', '=', 'latest.max_created_at');
+            //     }
+            // )
             ->orderBy('messages.created_at', 'desc')
             ->take(10)
             ->get();
@@ -310,6 +310,49 @@ class PhoneController extends Controller
         $number = Number::find($request->number);
 
         if($number){
+            // check if receiving number is on prophone and create message twice first outgoing and second for incoming
+
+            $receiver = $request->to;
+            $receiver_number = Number::where('number', $receiver)->first();
+            if($receiver_number){
+                $text = $request->message;
+               //create the outgoing
+               $message = Message::create([
+                'number' => $number->number,
+                'phoneNumber' => $request->to,
+                'content' => $text,
+                'from' => $number->number,
+                'type' => 'outgoing',
+                'to' => $request->to,
+                'status' => 'completed',
+                ]);
+
+                //create for the incoming
+                $message = Message::create([
+                    'number' => $request->to,
+                    'phoneNumber' => $number->number,
+                    'content' => $text,
+                    'from' => $number->number,
+                    'type' => 'incoming',
+                    'to' => $request->to,
+                    'status' => 'completed',
+                    ]);
+
+
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Message Sent Successfully!'
+                    ], 200);
+
+            }
+
+
+
+
+
+
+
             try {
 
 
