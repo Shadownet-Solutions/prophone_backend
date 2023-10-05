@@ -256,12 +256,19 @@ class PhoneController extends Controller
             // get one message per phoneNumber and order by latest
            
             $latestMessages = Message::select('messages.*')
-            ->where('number', $number->number)
+            ->whereIn('messages.id', function($query) use ($number) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->where('number', $number->number)
+                    ->groupBy('number');
+            })
+            // Message::select('messages.*')
+            // ->where('number', $number->number)
             // ->orWhere('from', $number->number)
             // ->joinSub(
             //     Message::select('phoneNumber', DB::raw('MAX(created_at) as max_created_at'))
             //         ->groupBy('phoneNumber'),
-            //     'latest',
+                // 'latest',
             //     function ($join) {
             //         $join->on('messages.phoneNumber', '=', 'latest.phoneNumber')
             //             ->on('messages.created_at', '=', 'latest.max_created_at');
